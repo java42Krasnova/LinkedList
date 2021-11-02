@@ -11,7 +11,7 @@ public class LinkedList<T> implements List<T> {
 		T obj;
 		Node<T> next;
 		Node<T> prev;
-		
+
 		Node(T obj) {
 			this.obj = obj;
 		}
@@ -122,24 +122,24 @@ public class LinkedList<T> implements List<T> {
 
 	@Override
 	public T remove(int index) {
-		//TODO Done
+		// TODO Done
 		if (!isValidIndex(index)) {
 			return null;
 		}
-		T elementToDelete = (T) new  Object();
+		T elementToDelete = (T) new Object();
 
 		if (index == 0) {
-			elementToDelete=head.obj;
+			elementToDelete = head.obj;
 			removeHead();
 		} else if (index == size - 1) {
-			elementToDelete=tail.obj;
+			elementToDelete = tail.obj;
 			removeTail();
-		} else 
-		{
-			elementToDelete = removeMeadle(index);}
+		} else {
+			elementToDelete = removeMeadle(index);
+		}
 		size--;
-		return	elementToDelete;
-		
+		return elementToDelete;
+
 	}
 
 	private T removeMeadle(int index) {
@@ -167,63 +167,51 @@ public class LinkedList<T> implements List<T> {
 
 	@Override
 	public int indexOf(Predicate<T> predicate) {
-		//TODO Done
+		// TODO Done
 		int res = -1;
 		Node<T> current = head;
-		for (int i =0; i <size; i++)
-		{
-			if(predicate.test(current.obj))
-			{
+		for (int i = 0; i < size; i++) {
+			if (predicate.test(current.obj)) {
 				res = i;
-				break;} 
-			else {
-			current = current.next;
-		}
-	
+				break;
+			} else {
+				current = current.next;
+			}
+
 		}
 		return res;
 	}
 
 	@Override
 	public int lastIndexOf(Predicate<T> predicate) {
-		//TODO done
-		int res =-1;
+		// TODO done
+		int res = -1;
 		Node<T> current = tail;
-		for (int i =size-1; i >=0; i--)
-		{
-			if(predicate.test(current.obj))
-			{
+		for (int i = size - 1; i >= 0; i--) {
+			if (predicate.test(current.obj)) {
 				res = i;
-				break;} 
-			else {
-			current = current.prev;
+				break;
+			} else {
+				current = current.prev;
+			}
+
 		}
-	
-		}
-		
-		return  res;
+
+		return res;
 	}
 
 	@Override
 	public boolean removeIf(Predicate<T> predicate) {
-		//TODO done
+		// TODO done
 		int sizeBeforeRemove = size;
 		Node<T> current = tail;
-		
-		for (int i= sizeBeforeRemove-1; i>=0; i--)
-		
+		for (int i = sizeBeforeRemove - 1; i >= 0; i--)
 		{
-			if(!predicate.test(current.obj))
-			{
-				current=current.prev;
-		}
-			else {
-				
-				current=current.prev;
+			if (predicate.test(current.obj)) {
 				remove(i);
 			}
+			current = current.prev;
 		}
-		
 		return sizeBeforeRemove > size;
 	}
 
@@ -237,12 +225,12 @@ public class LinkedList<T> implements List<T> {
 
 	private T[] listToArray() {
 		// TODO
-		//Done
+		// Done
 		T[] array = (T[]) new Object[size];
 		Node<T> current = head;
 		for (int i = 0; i < array.length; i++) {
 			array[i] = current.obj;
-			current=current.next;
+			current = current.next;
 		}
 		return array;
 	}
@@ -251,10 +239,9 @@ public class LinkedList<T> implements List<T> {
 		// TODO done
 		Node<T> current = head;
 		for (int i = 0; i < array.length; i++) {
-			current.obj=array[i];
-			current=current.next;
+			current.obj = array[i];
+			current = current.next;
 		}
 	}
-	
 
 }
