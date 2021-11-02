@@ -126,12 +126,14 @@ public class LinkedList<T> implements List<T> {
 		if (!isValidIndex(index)) {
 			return null;
 		}
+		//[YG] - getting reference to T object causes additional passing over the list
 		T elementToDelete = get(index);
 		if (index == 0) {
 			removeHead();
 		} else if (index == size - 1) {
 			removeTail();
 		} else {
+			//[YG] the previous comment should direct you for updating removeMeadle call
 			removeMeadle(index);
 		}
 		return elementToDelete;
@@ -169,6 +171,7 @@ public class LinkedList<T> implements List<T> {
 		//TODO Done
 		int res = -1;
 		for (int i = 0; i < size; i++) {
+			//[YG] very ineffective implementation as each get(i) requires addittional passing over list
 			if (predicate.test(get(i))) {
 				res = i;
 				break;
@@ -182,6 +185,7 @@ public class LinkedList<T> implements List<T> {
 		//TODO done
 		int res = -1;
 		for (int i = size - 1; i >= 0; i--) {
+			//[YG] very ineffective implementation as each get(i) requires addittional passing over list
 			if (predicate.test(get(i))) {
 				res = i;
 				break;
@@ -195,6 +199,7 @@ public class LinkedList<T> implements List<T> {
 		//TODO done
 		int sizeBeforeRemove = size;
 		for (int i = sizeBeforeRemove - 1; i >= 0; i--) {
+			//[YG] very ineffective implementation as each get(i) requires addittional passing over list
 			if (predicate.test(get(i))) {
 				remove(i);
 			}
@@ -216,6 +221,7 @@ public class LinkedList<T> implements List<T> {
 		//Done
 		T[] array = (T[]) new Object[size];
 		for (int i = 0; i < array.length; i++) {
+			//[YG] very ineffective implementation as each get(i) requires addittional passing over list
 			array[i] = get(i);
 		}
 		return array;
@@ -224,8 +230,10 @@ public class LinkedList<T> implements List<T> {
 	private void fillListFromArray(T[] array) {
 		// TODO done
 		// passes over whole list and fills elements from index=0 to index=size - 1
+		//[YG] you don't need to create new List, but only fills already existing nodes
 		clearList();
 		for (int i = 0; i < array.length; i++) {
+			
 			add(array[i]);
 		}
 	}
