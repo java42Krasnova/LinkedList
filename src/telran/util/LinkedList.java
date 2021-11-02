@@ -11,7 +11,7 @@ public class LinkedList<T> implements List<T> {
 		T obj;
 		Node<T> next;
 		Node<T> prev;
-
+		
 		Node(T obj) {
 			this.obj = obj;
 		}
@@ -126,25 +126,27 @@ public class LinkedList<T> implements List<T> {
 		if (!isValidIndex(index)) {
 			return null;
 		}
-		//[YG] - getting reference to T object causes additional passing over the list
-		T elementToDelete = get(index);
+		T elementToDelete = (T) new  Object();
+
 		if (index == 0) {
+			elementToDelete=head.obj;
 			removeHead();
 		} else if (index == size - 1) {
+			elementToDelete=tail.obj;
 			removeTail();
-		} else {
-			//[YG] the previous comment should direct you for updating removeMeadle call
-			removeMeadle(index);
-		}
-		return elementToDelete;
+		} else 
+		{
+			elementToDelete = removeMeadle(index);}
+		size--;
+		return	elementToDelete;
+		
 	}
 
-	private void removeMeadle(int index) {
+	private T removeMeadle(int index) {
 		Node<T> nodeToDelete = getNode(index);
 		nodeToDelete.next.prev = nodeToDelete.prev;
 		nodeToDelete.prev.next = nodeToDelete.next;
-		size--;
-
+		return nodeToDelete.obj;
 	}
 
 	private void removeTail() {
@@ -153,7 +155,6 @@ public class LinkedList<T> implements List<T> {
 		if (tail != null) {
 			tail.next = null;
 		}
-		size--;
 
 	}
 
@@ -162,20 +163,23 @@ public class LinkedList<T> implements List<T> {
 		if (head != null) {
 			head.prev = null;
 		}
-		size--;
-
 	}
 
 	@Override
 	public int indexOf(Predicate<T> predicate) {
 		//TODO Done
 		int res = -1;
-		for (int i = 0; i < size; i++) {
-			//[YG] very ineffective implementation as each get(i) requires addittional passing over list
-			if (predicate.test(get(i))) {
+		Node<T> current = head;
+		for (int i =0; i <size; i++)
+		{
+			if(predicate.test(current.obj))
+			{
 				res = i;
-				break;
-			}
+				break;} 
+			else {
+			current = current.next;
+		}
+	
 		}
 		return res;
 	}
@@ -183,28 +187,43 @@ public class LinkedList<T> implements List<T> {
 	@Override
 	public int lastIndexOf(Predicate<T> predicate) {
 		//TODO done
-		int res = -1;
-		for (int i = size - 1; i >= 0; i--) {
-			//[YG] very ineffective implementation as each get(i) requires addittional passing over list
-			if (predicate.test(get(i))) {
+		int res =-1;
+		Node<T> current = tail;
+		for (int i =size-1; i >=0; i--)
+		{
+			if(predicate.test(current.obj))
+			{
 				res = i;
-				break;
-			}
+				break;} 
+			else {
+			current = current.prev;
 		}
-		return res;
+	
+		}
+		
+		return  res;
 	}
 
 	@Override
 	public boolean removeIf(Predicate<T> predicate) {
 		//TODO done
 		int sizeBeforeRemove = size;
-		for (int i = sizeBeforeRemove - 1; i >= 0; i--) {
-			//[YG] very ineffective implementation as each get(i) requires addittional passing over list
-			if (predicate.test(get(i))) {
+		Node<T> current = tail;
+		
+		for (int i= sizeBeforeRemove-1; i>=0; i--)
+		
+		{
+			if(!predicate.test(current.obj))
+			{
+				current=current.prev;
+		}
+			else {
+				
+				current=current.prev;
 				remove(i);
 			}
 		}
-
+		
 		return sizeBeforeRemove > size;
 	}
 
@@ -220,28 +239,22 @@ public class LinkedList<T> implements List<T> {
 		// TODO
 		//Done
 		T[] array = (T[]) new Object[size];
+		Node<T> current = head;
 		for (int i = 0; i < array.length; i++) {
-			//[YG] very ineffective implementation as each get(i) requires addittional passing over list
-			array[i] = get(i);
+			array[i] = current.obj;
+			current=current.next;
 		}
 		return array;
 	}
 
 	private void fillListFromArray(T[] array) {
 		// TODO done
-		// passes over whole list and fills elements from index=0 to index=size - 1
-		//[YG] you don't need to create new List, but only fills already existing nodes
-		clearList();
+		Node<T> current = head;
 		for (int i = 0; i < array.length; i++) {
-			
-			add(array[i]);
+			current.obj=array[i];
+			current=current.next;
 		}
 	}
 	
-	private void clearList() {
-		head = null;
-	    tail = null;
-		size = 0;
-	}
 
 }
