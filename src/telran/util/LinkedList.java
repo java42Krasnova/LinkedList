@@ -11,7 +11,7 @@ public class LinkedList<T> implements List<T> {
 		T obj;
 		Node<T> next;
 		Node<T> prev;
-		
+
 		Node(T obj) {
 			this.obj = obj;
 		}
@@ -22,6 +22,7 @@ public class LinkedList<T> implements List<T> {
 
 	@Override
 	public void add(T element) {
+		// complexity O[1]
 		Node<T> newNode = new Node<>(element);
 		if (head == null) {
 			head = tail = newNode;
@@ -36,6 +37,7 @@ public class LinkedList<T> implements List<T> {
 	}
 
 	private Node<T> getNode(int index) {
+		// Complexity O[N]
 		Node<T> res = null;
 		if (isValidIndex(index)) {
 			res = index <= size / 2 ? getNodefromLeft(index) : getNodeFromRight(index);
@@ -70,6 +72,7 @@ public class LinkedList<T> implements List<T> {
 
 	@Override
 	public boolean add(int index, T element) {
+		// O[N]
 		boolean res = false;
 		if (index == size) {
 			add(element);
@@ -106,12 +109,13 @@ public class LinkedList<T> implements List<T> {
 
 	@Override
 	public int size() {
-
+//O[1]
 		return size;
 	}
 
 	@Override
 	public T get(int index) {
+
 		T res = null;
 		Node<T> resNode = getNode(index);
 		if (resNode != null) {
@@ -122,21 +126,24 @@ public class LinkedList<T> implements List<T> {
 
 	@Override
 	public T remove(int index) {
-		//TODO Done
+		// O[n]
 		T elementToDelete = null;
 		if (!isValidIndex(index)) {
 			return elementToDelete;
 		}
+
 		if (index == 0) {
-			elementToDelete=removeHead();;
-			
+			elementToDelete = removeHead();
+			;
+
 		} else if (index == size - 1) {
-			elementToDelete=removeTail();
-		} else 
-		{
-			elementToDelete = removeMeadle(index);}
+			elementToDelete = removeTail();
+
+		} else {
+			elementToDelete = removeMeadle(index);
+		}
 		size--;
-		return	elementToDelete;		
+		return elementToDelete;
 	}
 
 	private T removeMeadle(int index) {
@@ -147,7 +154,7 @@ public class LinkedList<T> implements List<T> {
 	}
 
 	private T removeTail() {
-		T elementForDel= tail.obj;
+		T elementForDel = tail.obj;
 		tail = tail.prev;
 
 		if (tail != null) {
@@ -157,7 +164,7 @@ public class LinkedList<T> implements List<T> {
 	}
 
 	private T removeHead() {
-		T elementForDel= head.obj;
+		T elementForDel = head.obj;
 		head = head.next;
 		if (head != null) {
 			head.prev = null;
@@ -167,61 +174,50 @@ public class LinkedList<T> implements List<T> {
 
 	@Override
 	public int indexOf(Predicate<T> predicate) {
-		//TODO Done
+		// O[N]
 		int res = -1;
 		Node<T> current = head;
-		for (int i =0; i <size; i++)
-		{
-			if(predicate.test(current.obj))
-			{
+		for (int i = 0; i < size; i++) {
+			if (predicate.test(current.obj)) {
 				res = i;
-				break;} 
-			else {
-			current = current.next;
-		}
-	
+				break;
+			} else {
+				current = current.next;
+			}
+
 		}
 		return res;
 	}
 
 	@Override
 	public int lastIndexOf(Predicate<T> predicate) {
-		//TODO done
-		int res =-1;
+		// O[N]
+		int res = -1;
 		Node<T> current = tail;
-		for (int i =size-1; i >=0; i--)
-		{
-			if(predicate.test(current.obj))
-			{
+		for (int i = size - 1; i >= 0; i--) {
+			if (predicate.test(current.obj)) {
 				res = i;
-				break;} 
-			else {
-			current = current.prev;
+				break;
+			} else {
+				current = current.prev;
+			}
+
 		}
-	
-		}
-		
-		return  res;
+
+		return res;
 	}
 
 	@Override
 	public boolean removeIf(Predicate<T> predicate) {
-		//TODO done
 		int sizeBeforeRemove = size;
 		Node<T> current = tail;
-		
-		for (int i= sizeBeforeRemove-1; i>=0; i--)
-		
-		{
-			if(predicate.test(current.obj))
-			{
-				remove(i); //[YG] if you introduced private method removeNode the code would be more efficient
+		for (int i = sizeBeforeRemove - 1; i >= 0; i--) {
+			if (predicate.test(current.obj)) {
+				remove(i);
+			}
+			current = current.prev;
+
 		}
-			
-				current=current.prev;
-			
-		}
-		
 		return sizeBeforeRemove > size;
 	}
 
@@ -234,25 +230,53 @@ public class LinkedList<T> implements List<T> {
 	}
 
 	private T[] listToArray() {
-		// TODO
-		//Done
+
 		T[] array = (T[]) new Object[size];
 		Node<T> current = head;
 		for (int i = 0; i < array.length; i++) {
 			array[i] = current.obj;
-			current=current.next;
+			current = current.next;
 		}
 		return array;
 	}
 
 	private void fillListFromArray(T[] array) {
-		// TODO done
+
 		Node<T> current = head;
 		for (int i = 0; i < array.length; i++) {
-			current.obj=array[i];
-			current=current.next;
+			current.obj = array[i];
+			current = current.next;
 		}
 	}
-	
+
+	@Override
+	public int sortedSearch(T pattern, Comparator<T> comp) {
+		// TODO DONE
+		Node<T> currentNode = head;
+		int resIndex = 0;
+		if (comp.compare(pattern, tail.obj) > 0) {
+			return -(size + 1);
+		}
+		for (int i = 0; i < size; i++) {
+			int resComp = comp.compare(pattern, currentNode.obj);
+			if (resComp == 0) {
+				return  resIndex;
+			}
+			if (resComp > 0) {
+				resIndex++;
+				currentNode = currentNode.next;
+			} else {
+				return -(resIndex + 1);
+			}
+		}
+		return resIndex;
+	}
+
+	@Override
+	public void clear() {
+		// DONE
+		head = tail = null;
+		size = 0;
+	}
 
 }
