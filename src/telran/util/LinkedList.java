@@ -253,25 +253,25 @@ public class LinkedList<T> implements List<T> {
 	public int sortedSearch(T pattern, Comparator<T> comp) {
 		// TODO DONE
 		Node<T> currentNode = head;
-		int resIndex = 0;
-		if (comp.compare(pattern, tail.obj) > 0) {
+ 		int resIndex = 0;
+ 		if (comp.compare(pattern, tail.obj) > 0) {
 			return -(size + 1);
-		}
-		for (int i = 0; i < size; i++) {
-			int resComp = comp.compare(pattern, currentNode.obj);
-			if (resComp == 0) {
-				return  resIndex;
-			}
-			if (resComp > 0) {
-				resIndex++;
-				currentNode = currentNode.next;
-			} else {
-				return -(resIndex + 1);
-			}
-		}
-		return resIndex;
+ 		}
+ 		for (int i = 0; i < size; i++) {
+ 			int resComp = comp.compare(pattern, currentNode.obj);
+ 			if (resComp == 0) {
+ 				resIndex=i;
+ 				break;
+ 			}
+ 			if (resComp > 0) {
+ 				currentNode = currentNode.next;
+ 			} else {
+ 				resIndex= -(i+1);
+ 				break;
+ 			}
+ 		}
+ 		return resIndex;
 	}
-
 	@Override
 	public void clear() {
 		// DONE
