@@ -126,6 +126,7 @@ public class LinkedList<T> implements List<T> {
 		if (!isValidIndex(index)) {
 			return null;
 		}
+		//[YG] - not clear what  the operator "new" is for
 		T elementToDelete = (T) new  Object();
 
 		if (index == 0) {
@@ -215,12 +216,13 @@ public class LinkedList<T> implements List<T> {
 		{
 			if(!predicate.test(current.obj))
 			{
+				//[YG] current=current.prev occures in "then" and "else" blocks. It means no need to apply if/else condtruction
 				current=current.prev;
 		}
 			else {
 				
 				current=current.prev;
-				remove(i);
+				remove(i); //[YG] if you introduced private method removeNode the code would be more efficient
 			}
 		}
 		
