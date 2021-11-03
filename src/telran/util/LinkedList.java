@@ -123,24 +123,20 @@ public class LinkedList<T> implements List<T> {
 	@Override
 	public T remove(int index) {
 		//TODO Done
+		T elementToDelete = null;
 		if (!isValidIndex(index)) {
-			return null;
+			return elementToDelete;
 		}
-		//[YG] - not clear what  the operator "new" is for
-		T elementToDelete = (T) new  Object();
-
 		if (index == 0) {
-			elementToDelete=head.obj;
-			removeHead();
+			elementToDelete=removeHead();;
+			
 		} else if (index == size - 1) {
-			elementToDelete=tail.obj;
-			removeTail();
+			elementToDelete=removeTail();
 		} else 
 		{
 			elementToDelete = removeMeadle(index);}
 		size--;
-		return	elementToDelete;
-		
+		return	elementToDelete;		
 	}
 
 	private T removeMeadle(int index) {
@@ -150,20 +146,23 @@ public class LinkedList<T> implements List<T> {
 		return nodeToDelete.obj;
 	}
 
-	private void removeTail() {
+	private T removeTail() {
+		T elementForDel= tail.obj;
 		tail = tail.prev;
 
 		if (tail != null) {
 			tail.next = null;
 		}
-
+		return elementForDel;
 	}
 
-	private void removeHead() {
+	private T removeHead() {
+		T elementForDel= head.obj;
 		head = head.next;
 		if (head != null) {
 			head.prev = null;
 		}
+		return elementForDel;
 	}
 
 	@Override
@@ -214,16 +213,13 @@ public class LinkedList<T> implements List<T> {
 		for (int i= sizeBeforeRemove-1; i>=0; i--)
 		
 		{
-			if(!predicate.test(current.obj))
+			if(predicate.test(current.obj))
 			{
-				//[YG] current=current.prev occures in "then" and "else" blocks. It means no need to apply if/else condtruction
-				current=current.prev;
-		}
-			else {
-				
-				current=current.prev;
 				remove(i); //[YG] if you introduced private method removeNode the code would be more efficient
-			}
+		}
+			
+				current=current.prev;
+			
 		}
 		
 		return sizeBeforeRemove > size;
