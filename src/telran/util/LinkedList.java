@@ -12,7 +12,7 @@ public class LinkedList<T> implements List<T> {
 		T obj;
 		Node<T> next;
 		Node<T> prev;
-
+		
 		Node(T obj) {
 			this.obj = obj;
 		}
@@ -20,36 +20,48 @@ public class LinkedList<T> implements List<T> {
 
 	private Node<T> head; // reference to the first element
 	private Node<T> tail; // reference to the last element
+
 	private class LinkedListIterator implements Iterator<T> {
 		Node<T> current = head;
+
 		@Override
 		public boolean hasNext() {
-			
+
 			return current != null;
 		}
 
 		@Override
 		public T next() {
-			//return current T object
+			// return current T object
 			T res = current.obj;
-			//FIXME check res and throwing exception
-			//moves to a next current
+			// FIXME check res and throwing exception
+			// moves to a next current
 			current = current.next;
 			return res;
 		}
+
 		@Override
+		//DONE!
 		public void remove() {
-			//TODO 
-			//removes element that has been returned by the last next call
-			//that is previous of the current. But if current is null, then tail
-			//should be removed
-			
+			if (current != null) {
+				removeNode(current.prev);
+			} else if (tail == head) {
+				head = null;
+				size = 0;
+			} else {
+				removeNode(tail);
+			}
 		}
-		
+
+		// removes element that has been returned by the last next call
+		// that is previous of the current. But if current is null, then tail
+		// should be removed
+
 	}
+
 	@Override
 	public void add(T element) {
-		//Complexity O[1]
+		// Complexity O[1]
 		Node<T> newNode = new Node<>(element);
 		if (head == null) {
 			head = tail = newNode;
@@ -61,10 +73,11 @@ public class LinkedList<T> implements List<T> {
 		size++;
 
 	}
+
 	private Node<T> getNode(int index) {
-		//O[N]
+		// O[N]
 		Node<T> res = null;
-		if(isValidIndex(index)) {
+		if (isValidIndex(index)) {
 			res = index <= size / 2 ? getNodefromLeft(index) : getNodeFromRight(index);
 		}
 		return res;
@@ -73,28 +86,31 @@ public class LinkedList<T> implements List<T> {
 	private Node<T> getNodeFromRight(int index) {
 		Node<T> current = tail;
 		int ind = size - 1;
-		while(ind != index) {
+		while (ind != index) {
 			ind--;
 			current = current.prev;
 		}
 		return current;
 	}
+
 	private Node<T> getNodefromLeft(int index) {
 		Node<T> current = head;
 		int ind = 0;
-		while(ind != index) {
+		while (ind != index) {
 			ind++;
 			current = current.next;
 		}
 		return current;
 	}
+
 	private boolean isValidIndex(int index) {
-		
-		return index >=0 && index < size;
+
+		return index >= 0 && index < size;
 	}
+
 	@Override
 	public boolean add(int index, T element) {
-		//O[N]
+		// O[N]
 		boolean res = false;
 		if (index == size) {
 			add(element);
@@ -116,17 +132,19 @@ public class LinkedList<T> implements List<T> {
 		Node<T> nodeAfter = getNode(index);
 		newNode.next = nodeAfter;
 		newNode.prev = nodeAfter.prev;
-		//nodeAfter.prev => reference to the old previous element
+		// nodeAfter.prev => reference to the old previous element
 		nodeAfter.prev.next = newNode;
 		nodeAfter.prev = newNode;
 		
 	}
+
 	private void addHead(Node<T> newNode) {
 		newNode.next = head;
 		head.prev = newNode;
 		head = newNode;
-		
+
 	}
+
 	@Override
 	public int size() {
 //O[1]
@@ -135,7 +153,7 @@ public class LinkedList<T> implements List<T> {
 
 	@Override
 	public T get(int index) {
-		//O[N]
+		// O[N]
 		T res = null;
 		Node<T> resNode = getNode(index);
 		if (resNode != null) {
@@ -146,32 +164,32 @@ public class LinkedList<T> implements List<T> {
 
 	@Override
 	public T remove(int index) {
-		//O[N]
+		// O[N]
 		return isValidIndex(index) ? removeNode(getNode(index)) : null;
 	}
 
 	@Override
 	public int indexOf(Predicate<T> predicate) {
-		//O[N]
+		// O[N]
 		Node<T> current = head;
 		int res = -1;
-		for(int i = 0; i < size; i++) {
+		for (int i = 0; i < size; i++) {
 			if (predicate.test(current.obj)) {
 				res = i;
 				break;
 			}
 			current = current.next;
 		}
-		
+
 		return res;
 	}
 
 	@Override
 	public int lastIndexOf(Predicate<T> predicate) {
-		//O[N]
+		// O[N]
 		int res = -1;
 		Node<T> current = tail;
-		for(int i = size - 1; i >=0; i--) {
+		for (int i = size - 1; i >= 0; i--) {
 			if (predicate.test(current.obj)) {
 				res = i;
 				break;
@@ -183,10 +201,20 @@ public class LinkedList<T> implements List<T> {
 
 	@Override
 	public boolean removeIf(Predicate<T> predicate) {
-		//O[N]
-		//TODO write removeIf implementation based on iterator 
-		//To apply items a., b., c. in the slide #18 with iterator.remove()
-		return false;
+		// O[N]
+		//DONE!!
+		// TODO write removeIf implementation based on iterator
+		// To apply items a., b., c. in the slide #18 with iterator.remove()
+		
+		Iterator<T> iterator = iterator();
+		int oldSize = size;
+		while (iterator.hasNext()) {
+			if (predicate.test(iterator.next())) {
+				iterator.remove();
+			}
+
+		}
+		return oldSize > size;
 	}
 
 	private T removeNode(Node<T> current) {
@@ -201,57 +229,62 @@ public class LinkedList<T> implements List<T> {
 		}
 		size--;
 		return current.obj;
-		
+
 	}
+
 	private void removeMiddle(Node<T> current) {
 		Node<T> beforeRemoved = current.prev;
 		Node<T> afterRemoved = current.next;
 		beforeRemoved.next = afterRemoved;
 		afterRemoved.prev = beforeRemoved;
-		
+
 	}
+
 	private void removeTail() {
 		tail = tail.prev;
 		tail.next = null;
-		
-		
+
 	}
+
 	private void removeHead() {
 		head = head.next;
 		head.prev = null;
-		
+
 	}
+
 	@Override
 	public void sort(Comparator<T> comp) {
-		//O[N* LogN]
+		// O[N* LogN]
 		T[] array = listToArray();
 		Arrays.sort(array, comp);
 		fillListFromArray(array);
-		
 
 	}
+
 	@SuppressWarnings("unchecked")
 	private T[] listToArray() {
-		
-		//creates array of T objects
-		//passes over whole list and fills the array
+
+		// creates array of T objects
+		// passes over whole list and fills the array
 		T[] res = (T[]) new Object[size];
 		Node<T> current = head;
-		for(int i = 0; i < size; i++) {
+		for (int i = 0; i < size; i++) {
 			res[i] = current.obj;
 			current = current.next;
 		}
 		return res;
 	}
+
 	private void fillListFromArray(T[] array) {
-		
-		//passes over whole list and fills elements from index=0 to index=size - 1 
+
+		// passes over whole list and fills elements from index=0 to index=size - 1
 		Node<T> current = head;
-		for(int i = 0; i < array.length; i++) {
+		for (int i = 0; i < array.length; i++) {
 			current.obj = array[i];
 			current = current.next;
 		}
 	}
+
 	@Override
 	public int sortedSearch(T pattern, Comparator<T> comp) {
 		Node<T> current = head;
@@ -261,7 +294,7 @@ public class LinkedList<T> implements List<T> {
 			if (resComp == 0) {
 				res = i;
 				break;
-			} else if(resComp < 0) {
+			} else if (resComp < 0) {
 				res = -(i + 1);
 				break;
 			}
@@ -269,15 +302,17 @@ public class LinkedList<T> implements List<T> {
 		}
 		return res;
 	}
+	
 	@Override
 	public void clear() {
 		head = tail = null;
 		size = 0;
-		
+
 	}
+
 	@Override
 	public Iterator<T> iterator() {
-		
+
 		return new LinkedListIterator();
 	}
 
