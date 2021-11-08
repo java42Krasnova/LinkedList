@@ -42,22 +42,25 @@ public class LinkedList<T> implements List<T> {
 
 		@Override
 		//DONE!
-		public void remove() {
-			if (current != null) {
-				removeNode(current.prev);
-			} else if (tail == head) {
-				head = null;
-				size = 0;
-			} else {
+		public void remove() {	
+			 if(current==null)
+			{
 				removeNode(tail);
 			}
+			 else if(current.prev==null)
+				{
+					removeNode(head);
+				}
+			 else {
+			 removeNode(current.prev);
+			 }
 		}
-
+	}
 		// removes element that has been returned by the last next call
 		// that is previous of the current. But if current is null, then tail
 		// should be removed
 
-	}
+	
 
 	@Override
 	public void add(T element) {
