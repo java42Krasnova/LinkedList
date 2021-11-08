@@ -32,10 +32,8 @@ public class LinkedList<T> implements List<T> {
 
 		@Override
 		public T next() {
-			// return current T object
 			T res = current.obj;
 			// FIXME check res and throwing exception
-			// moves to a next current
 			current = current.next;
 			return res;
 		}
@@ -54,6 +52,7 @@ public class LinkedList<T> implements List<T> {
 			 else {
 			 removeNode(current.prev);
 			 }
+//
 		}
 	}
 		// removes element that has been returned by the last next call
