@@ -5,8 +5,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.function.Predicate;
 
-public class LinkedList<T> implements List<T> {
-	private int size;
+public class LinkedList<T> extends AbstractList<T> {
 
 	private static class Node<T> {
 		T obj;
@@ -102,11 +101,6 @@ public class LinkedList<T> implements List<T> {
 		return current;
 	}
 
-	private boolean isValidIndex(int index) {
-
-		return index >= 0 && index < size;
-	}
-
 	@Override
 	public boolean add(int index, T element) {
 		// O[N]
@@ -142,12 +136,6 @@ public class LinkedList<T> implements List<T> {
 		head.prev = newNode;
 		head = newNode;
 
-	}
-
-	@Override
-	public int size() {
-//O[1]
-		return size;
 	}
 
 	@Override

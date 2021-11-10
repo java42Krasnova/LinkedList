@@ -7,5 +7,6 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/list-inteface"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/list-abstract"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
