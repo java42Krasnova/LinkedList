@@ -45,10 +45,7 @@ public class LinkedList<T> implements List<T> {
 			{
 				removeNode(tail);
 			}
-//			 else if(current.prev==null)
-//				{
-//					removeNode(head);
-//				}
+			 
 			 else {
 			 removeNode(current.prev);
 			 }
