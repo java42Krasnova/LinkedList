@@ -2,6 +2,7 @@ package telran.util;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.function.Predicate;
 
 public class LinkedList<T> implements List<T> {
@@ -11,7 +12,7 @@ public class LinkedList<T> implements List<T> {
 		T obj;
 		Node<T> next;
 		Node<T> prev;
-
+		
 		Node(T obj) {
 			this.obj = obj;
 		}
@@ -20,16 +21,52 @@ public class LinkedList<T> implements List<T> {
 	private Node<T> head; // reference to the first element
 	private Node<T> tail; // reference to the last element
 
+	private class LinkedListIterator implements Iterator<T> {
+		Node<T> current = head;
+
+		@Override
+		public boolean hasNext() {
+
+			return current != null;
+		}
+
+		@Override
+		public T next() {
+			T res = current.obj;
+			// FIXME check res and throwing exception
+			current = current.next;
+			return res;
+		}
+
+		@Override
+		//DONE!
+		public void remove() {	
+			 if(current==null)
+			{
+				removeNode(tail);
+			}
+			 
+			 else {
+			 removeNode(current.prev);
+			 }
+//
+		}
+	}
+		// removes element that has been returned by the last next call
+		// that is previous of the current. But if current is null, then tail
+		// should be removed
+
+	
+
 	@Override
 	public void add(T element) {
-		// complexity O[1]
+		// Complexity O[1]
 		Node<T> newNode = new Node<>(element);
 		if (head == null) {
 			head = tail = newNode;
 		} else {
 			tail.next = newNode;
 			newNode.prev = tail;
-
 			tail = newNode;
 		}
 		size++;
@@ -37,7 +74,7 @@ public class LinkedList<T> implements List<T> {
 	}
 
 	private Node<T> getNode(int index) {
-		// Complexity O[N]
+		// O[N]
 		Node<T> res = null;
 		if (isValidIndex(index)) {
 			res = index <= size / 2 ? getNodefromLeft(index) : getNodeFromRight(index);
@@ -97,7 +134,7 @@ public class LinkedList<T> implements List<T> {
 		// nodeAfter.prev => reference to the old previous element
 		nodeAfter.prev.next = newNode;
 		nodeAfter.prev = newNode;
-
+		
 	}
 
 	private void addHead(Node<T> newNode) {
@@ -115,7 +152,7 @@ public class LinkedList<T> implements List<T> {
 
 	@Override
 	public T get(int index) {
-
+		// O[N]
 		T res = null;
 		Node<T> resNode = getNode(index);
 		if (resNode != null) {
@@ -126,66 +163,23 @@ public class LinkedList<T> implements List<T> {
 
 	@Override
 	public T remove(int index) {
-		// O[n]
-		T elementToDelete = null;
-		if (!isValidIndex(index)) {
-			return elementToDelete;
-		}
-
-		if (index == 0) {
-			elementToDelete = removeHead();
-			;
-
-		} else if (index == size - 1) {
-			elementToDelete = removeTail();
-
-		} else {
-			elementToDelete = removeMeadle(index);
-		}
-		size--;
-		return elementToDelete;
-	}
-
-	private T removeMeadle(int index) {
-		Node<T> nodeToDelete = getNode(index);
-		nodeToDelete.next.prev = nodeToDelete.prev;
-		nodeToDelete.prev.next = nodeToDelete.next;
-		return nodeToDelete.obj;
-	}
-
-	private T removeTail() {
-		T elementForDel = tail.obj;
-		tail = tail.prev;
-
-		if (tail != null) {
-			tail.next = null;
-		}
-		return elementForDel;
-	}
-
-	private T removeHead() {
-		T elementForDel = head.obj;
-		head = head.next;
-		if (head != null) {
-			head.prev = null;
-		}
-		return elementForDel;
+		// O[N]
+		return isValidIndex(index) ? removeNode(getNode(index)) : null;
 	}
 
 	@Override
 	public int indexOf(Predicate<T> predicate) {
 		// O[N]
-		int res = -1;
 		Node<T> current = head;
+		int res = -1;
 		for (int i = 0; i < size; i++) {
 			if (predicate.test(current.obj)) {
 				res = i;
 				break;
-			} else {
-				current = current.next;
 			}
-
+			current = current.next;
 		}
+
 		return res;
 	}
 
@@ -198,50 +192,91 @@ public class LinkedList<T> implements List<T> {
 			if (predicate.test(current.obj)) {
 				res = i;
 				break;
-			} else {
-				current = current.prev;
 			}
-
+			current = current.prev;
 		}
-
 		return res;
 	}
 
 	@Override
 	public boolean removeIf(Predicate<T> predicate) {
-		int sizeBeforeRemove = size;
-		Node<T> current = tail;
-		for (int i = sizeBeforeRemove - 1; i >= 0; i--) {
-			if (predicate.test(current.obj)) {
-				remove(i);
+		// O[N]
+		//DONE!!
+		// TODO write removeIf implementation based on iterator
+		// To apply items a., b., c. in the slide #18 with iterator.remove()
+		
+		Iterator<T> iterator = iterator();
+		int oldSize = size;
+		while (iterator.hasNext()) {
+			if (predicate.test(iterator.next())) {
+				iterator.remove();
 			}
-			current = current.prev;
 
 		}
-		return sizeBeforeRemove > size;
+		return oldSize > size;
+	}
+
+	private T removeNode(Node<T> current) {
+		if (head == tail) {
+			head = tail = null;
+		} else if (current == head) {
+			removeHead();
+		} else if (current == tail) {
+			removeTail();
+		} else {
+			removeMiddle(current);
+		}
+		size--;
+		return current.obj;
+
+	}
+
+	private void removeMiddle(Node<T> current) {
+		Node<T> beforeRemoved = current.prev;
+		Node<T> afterRemoved = current.next;
+		beforeRemoved.next = afterRemoved;
+		afterRemoved.prev = beforeRemoved;
+
+	}
+
+	private void removeTail() {
+		tail = tail.prev;
+		tail.next = null;
+
+	}
+
+	private void removeHead() {
+		head = head.next;
+		head.prev = null;
+
 	}
 
 	@Override
 	public void sort(Comparator<T> comp) {
+		// O[N* LogN]
 		T[] array = listToArray();
 		Arrays.sort(array, comp);
 		fillListFromArray(array);
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private T[] listToArray() {
 
-		T[] array = (T[]) new Object[size];
+		// creates array of T objects
+		// passes over whole list and fills the array
+		T[] res = (T[]) new Object[size];
 		Node<T> current = head;
-		for (int i = 0; i < array.length; i++) {
-			array[i] = current.obj;
+		for (int i = 0; i < size; i++) {
+			res[i] = current.obj;
 			current = current.next;
 		}
-		return array;
+		return res;
 	}
 
 	private void fillListFromArray(T[] array) {
 
+		// passes over whole list and fills elements from index=0 to index=size - 1
 		Node<T> current = head;
 		for (int i = 0; i < array.length; i++) {
 			current.obj = array[i];
@@ -251,32 +286,33 @@ public class LinkedList<T> implements List<T> {
 
 	@Override
 	public int sortedSearch(T pattern, Comparator<T> comp) {
-		// TODO DONE
-		Node<T> currentNode = head;
-		int resIndex = 0;
-		if (comp.compare(pattern, tail.obj) > 0) {
-			return -(size + 1);
-		}
+		Node<T> current = head;
+		int res = -(size + 1);
 		for (int i = 0; i < size; i++) {
-			int resComp = comp.compare(pattern, currentNode.obj);
+			int resComp = comp.compare(pattern, current.obj);
 			if (resComp == 0) {
-				return  resIndex;
+				res = i;
+				break;
+			} else if (resComp < 0) {
+				res = -(i + 1);
+				break;
 			}
-			if (resComp > 0) {
-				resIndex++;
-				currentNode = currentNode.next;
-			} else {
-				return -(resIndex + 1);
-			}
+			current = current.next;
 		}
-		return resIndex;
+		return res;
+	}
+	
+	@Override
+	public void clear() {
+		head = tail = null;
+		size = 0;
+
 	}
 
 	@Override
-	public void clear() {
-		// DONE
-		head = tail = null;
-		size = 0;
+	public Iterator<T> iterator() {
+
+		return new LinkedListIterator();
 	}
 
 }
