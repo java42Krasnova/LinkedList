@@ -38,7 +38,6 @@ public class LinkedList<T> extends AbstractList<T> {
 		}
 
 		@Override
-		//DONE!
 		public void remove() {	
 			 if(current==null)
 			{
@@ -48,7 +47,6 @@ public class LinkedList<T> extends AbstractList<T> {
 			 else {
 			 removeNode(current.prev);
 			 }
-//
 		}
 	}
 		// removes element that has been returned by the last next call
@@ -189,9 +187,6 @@ public class LinkedList<T> extends AbstractList<T> {
 	@Override
 	public boolean removeIf(Predicate<T> predicate) {
 		// O[N]
-		//DONE!!
-		// TODO write removeIf implementation based on iterator
-		// To apply items a., b., c. in the slide #18 with iterator.remove()
 		
 		Iterator<T> iterator = iterator();
 		int oldSize = size;
@@ -250,7 +245,6 @@ public class LinkedList<T> extends AbstractList<T> {
 
 	@SuppressWarnings("unchecked")
 	private T[] listToArray() {
-
 		// creates array of T objects
 		// passes over whole list and fills the array
 		T[] res = (T[]) new Object[size];
@@ -263,7 +257,6 @@ public class LinkedList<T> extends AbstractList<T> {
 	}
 
 	private void fillListFromArray(T[] array) {
-
 		// passes over whole list and fills elements from index=0 to index=size - 1
 		Node<T> current = head;
 		for (int i = 0; i < array.length; i++) {
