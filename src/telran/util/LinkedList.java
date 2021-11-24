@@ -3,15 +3,16 @@ package telran.util;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
-public class LinkedList<T> extends AbstractList<T> {
+public class LinkedList<T> extends AbstractList<T> implements List<T> {
 
 	private static class Node<T> {
 		T obj;
 		Node<T> next;
 		Node<T> prev;
-		
+
 		Node(T obj) {
 			this.obj = obj;
 		}
@@ -22,6 +23,7 @@ public class LinkedList<T> extends AbstractList<T> {
 
 	private class LinkedListIterator implements Iterator<T> {
 		Node<T> current = head;
+		boolean isWasNext = false;
 
 		@Override
 		public boolean hasNext() {
@@ -30,30 +32,34 @@ public class LinkedList<T> extends AbstractList<T> {
 		}
 
 		@Override
-		public T next() {
+		public T next() {// TODO done
+			if (!hasNext()) {
+				throw new NoSuchElementException();
+			}
 			T res = current.obj;
-			// FIXME check res and throwing exception
 			current = current.next;
+			isWasNext = true;
 			return res;
 		}
 
 		@Override
-		public void remove() {	
-			 if(current==null)
-			{
-				removeNode(tail);
+		public void remove() {
+			// TODO done
+			if (!isWasNext) {
+				throw new IllegalStateException();
 			}
-			 
-			 else {
-			 removeNode(current.prev);
-			 }
+			if (current == null) {
+				removeNode(tail);
+			} else {
+				removeNode(current.prev);
+			}
+			isWasNext = false;
 		}
-	}
-		// removes element that has been returned by the last next call
-		// that is previous of the current. But if current is null, then tail
-		// should be removed
 
-	
+	}
+	// removes element that has been returned by the last next call
+	// that is previous of the current. But if current is null, then tail
+	// should be removed
 
 	@Override
 	public void add(T element) {
@@ -126,7 +132,7 @@ public class LinkedList<T> extends AbstractList<T> {
 		// nodeAfter.prev => reference to the old previous element
 		nodeAfter.prev.next = newNode;
 		nodeAfter.prev = newNode;
-		
+
 	}
 
 	private void addHead(Node<T> newNode) {
@@ -187,7 +193,7 @@ public class LinkedList<T> extends AbstractList<T> {
 	@Override
 	public boolean removeIf(Predicate<T> predicate) {
 		// O[N]
-		
+
 		Iterator<T> iterator = iterator();
 		int oldSize = size;
 		while (iterator.hasNext()) {
@@ -282,7 +288,7 @@ public class LinkedList<T> extends AbstractList<T> {
 		}
 		return res;
 	}
-	
+
 	@Override
 	public void clear() {
 		head = tail = null;
