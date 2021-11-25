@@ -23,6 +23,7 @@ public class LinkedList<T> extends AbstractList<T> implements List<T> {
 
 	private class LinkedListIterator implements Iterator<T> {
 		Node<T> current = head;
+		// V.R. May be isNextExecuted looks better
 		boolean isWasNext = false;
 
 		@Override
@@ -33,6 +34,11 @@ public class LinkedList<T> extends AbstractList<T> implements List<T> {
 
 		@Override
 		public T next() {// TODO done
+			/* V.R.
+			 *  Why to call the function if it is possible don't call
+			 *  if(current == null)
+			 *  does the same, but it is simpler
+			 */
 			if (!hasNext()) {
 				throw new NoSuchElementException();
 			}
